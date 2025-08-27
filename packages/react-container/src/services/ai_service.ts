@@ -2,8 +2,13 @@ import {
     Florence2ForConditionalGeneration,
     AutoProcessor,
     load_image,
-    pipeline,
+    RawImage,
+    AutoTokenizer,
+    CLIPTextModelWithProjection,
+    CLIPVisionModelWithProjection,
+    dot,
 } from "@huggingface/transformers";
+import { cosinesim } from "./db_service";
 
 export default class AIService {
     async _prompt(photo_data: string, task: string): Promise<string> {
@@ -46,7 +51,7 @@ export default class AIService {
             task,
             image.size
         );
-        console.log("PII result", result);
+        console.log("VLM result", result);
         return Object.values(result)[0] as string;
     }
 
@@ -62,15 +67,31 @@ export default class AIService {
         return result.split(", ");
     }
 
-    async generateVector(photo_data: string) {
-        const image_feature_extractor = await pipeline(
-            "image-feature-extraction",
-            "Xenova/dinov2-small"
-        );
-        const url = photo_data;
-        const features = await image_feature_extractor(url);
-        console.log(features);
-        return features.ort_tensor.data as [];
+    async generateImageVector(photo_data: string) {
+        const model_id = 'Xenova/mobileclip_s2';
+        const processor = await AutoProcessor.from_pretrained(model_id);
+        const vision_model = await CLIPVisionModelWithProjection.from_pretrained(model_id);
+        const image = await RawImage.read(photo_data);
+        const image_inputs = await processor(image);
+        const { image_embeds } = await vision_model(image_inputs);
+        const normalized_image_embeds = image_embeds.normalize().tolist();
+        return normalized_image_embeds[0];
+    }
+
+    async generateVector(description: string) {
+        const model_id = 'Xenova/mobileclip_s2';
+        const tokenizer = await AutoTokenizer.from_pretrained(model_id);
+        const text_model = await CLIPTextModelWithProjection.from_pretrained(model_id);
+        const text_inputs = tokenizer(description, { padding: 'max_length', truncation: true });
+        const { text_embeds } = await text_model(text_inputs);
+        const normalized_text_embeds = text_embeds.normalize().tolist();
+        return normalized_text_embeds[0];
+    }
+
+    async computeSimilarity(v1, v2) {
+        console.log("Computing similarity", v1, v2)
+        return dot(v1, v2)
+        // return cosinesim(v1, v2)
     }
 
     async getBlurredImage(photo_data: string): Promise<string> {

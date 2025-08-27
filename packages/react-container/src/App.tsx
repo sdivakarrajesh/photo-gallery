@@ -19,9 +19,14 @@ const App = () => {
     };
     const run = async () => {
       // await new StorageService().addPhoto(imageData);
+      // console.log(...await new StorageService().filterPhotos("passport"));
+      // console.log(...await new StorageService().filterPhotos("A girl is shown on a card with the words Grand Duche De Luxembourg on it."));
       // await new AIService().hasPII(imageData)
       // await new AIService().extractKeywords(imageData)
-      // await new AIService().generateVector(imageData)
+      let textFeatures = await new AIService().generateVector("passport")
+      let imageFeatures = await new AIService().generateImageVector(imageData)
+      console.log("similarity", await new AIService().computeSimilarity(textFeatures, imageFeatures))
+      console.log("features", { textFeatures, imageFeatures });
       // await new AIService().getBlurredImage(imageData)
       // let encrypted = await new CryptoService().encryptData(imageData, "secret")
       // let decrypted = await new CryptoService().decryptData(encrypted, "secret")

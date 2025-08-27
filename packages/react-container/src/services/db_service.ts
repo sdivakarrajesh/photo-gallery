@@ -24,6 +24,17 @@ db.version(1).stores({
   photos: '++id, isEncrypted, *keywords'
 });
 
+export function cosinesim(A, B) {
+  const len = Math.min(A.length, B.length);
+  let dotproduct = 0, mA = 0, mB = 0;
+  for (let i = 0; i < len; i++) {
+    dotproduct += A[i] * B[i];
+    mA += A[i] * A[i];
+    mB += B[i] * B[i];
+  }
+  return dotproduct / (Math.sqrt(mA) * Math.sqrt(mB));
+}
+
 
 export default class StorageService {
   static secret = "secret";
@@ -34,7 +45,7 @@ export default class StorageService {
   async addPhoto(photo_data: string) {
     let hasPII = await new AIService().hasPII(photo_data)
     let keywords = await new AIService().extractKeywords(photo_data)
-    let vector = await new AIService().generateVector(photo_data)
+    let vector = await new AIService().generateVector(keywords.join(","))
 
     let photo: Omit<Photo, "id"> = {
       imageData: hasPII ? "" : photo_data,
@@ -49,6 +60,12 @@ export default class StorageService {
   }
 
   async filterPhotos(query: string) {
-    return []
+    const photos = await this.getPhotos();
+    let queryFeature = await new AIService().generateVector(query);
+    return photos.map(photo => {
+      let curr = photo.vector || []
+      let sim = cosinesim(curr, queryFeature);
+      return { ...photo, similarity: sim, org_vector: curr, comp_vector: queryFeature };
+    });
   }
 }
