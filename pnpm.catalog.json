@@ -1,0 +1,5 @@
+{
+  "default": {
+    "@lynx-js/qrcode-rsbuild-plugin": "^0.4.1"
+  }
+}

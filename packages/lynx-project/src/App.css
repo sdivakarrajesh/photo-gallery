@@ -1,0 +1,131 @@
+.page {
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to bottom, #020917, #101725);
+    color: white;
+    padding: 100px 20px;
+}
+
+.heading {
+    font-size: 3rem;
+    color: white;
+    font-weight: bold;
+}
+
+.subheading {
+    color: #b9c1d9;
+}
+
+.gallery-image {
+    /* width: 200px; */
+    background-position: center;
+}
+
+.scrollbar {
+    position: absolute;
+    right: 7px;
+    z-index: 1000;
+    width: 4px;
+    background: linear-gradient(to bottom, #ff6448, #ccddff, #3deae7);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow:
+        0px 0px 4px 1px rgba(12, 205, 223, 0.4),
+        0px 0px 16px 5px rgba(12, 205, 223, 0.5);
+}
+
+.scrollbar-effect {
+    width: 100%;
+    height: 80%;
+}
+
+.glow {
+    background-color: #333;
+    border-radius: 4px;
+    background: linear-gradient(45deg,
+            rgba(255, 255, 255, 0) 20%,
+            rgba(255, 255, 255, 0.8) 50%,
+            rgba(255, 255, 255, 0) 80%);
+    animation: flow 3s linear infinite;
+}
+
+@keyframes flow {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+
+.detail-view {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+
+.detail-view-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.image-full-view {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.blurred {
+    filter: blur(40px);
+
+}
+
+.overlay-lock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 54px;
+    height: 54px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    z-index: 2;
+    background:
+        radial-gradient(60% 60% at 20% 25%, rgba(255, 90, 165, 0.8), rgba(255, 90, 165, 0) 60%),
+        radial-gradient(70% 70% at 80% 25%, rgba(255, 210, 138, 0.85), rgba(255, 210, 138, 0) 60%),
+        radial-gradient(70% 70% at 40% 85%, rgba(121, 224, 255, 0.9), rgba(121, 224, 255, 0) 65%),
+        radial-gradient(90% 90% at 60% 60%, rgba(106, 125, 255, 0.65), rgba(106, 125, 255, 0) 70%);
+    background-position: 0% 0%, 100% 0%, 50% 100%, 30% 60%;
+    animation: aurora-pan 5s ease-in-out infinite alternate;
+    padding: 15px;
+}
+
+
+@keyframes aurora-pan {
+    0% {
+        background-position: 0% 0%, 100% 0%, 50% 100%, 30% 60%;
+    }
+
+    50% {
+        background-position: 80% 20%, 20% 80%, 30% 40%, 60% 30%;
+    }
+
+    100% {
+        background-position: 0% 0%, 100% 0%, 50% 100%, 30% 60%;
+    }
+}
+
+.overlay-lock>.image {
+    width: clamp(20px, 7vw, 36px);
+    height: clamp(20px, 7vw, 36px);
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+}
