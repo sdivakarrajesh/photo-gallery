@@ -66,7 +66,8 @@ export function App() {
 
   useEffect(() => {
     console.info("Hello, from Lynx 2");
-    // NativeModules.bridge.call("getImages", null, ()=>{})
+    
+
   }, []);
 
   const onScrollMTS = (event: ScrollEvent) => {
@@ -91,6 +92,11 @@ export function App() {
           <view className="header">
             <text className="heading">Gallery</text>
             <image
+            bindtap={()=>{
+              NativeModules.bridge.call("pickImage", null, (response)=>{
+                console.log("picked", response);
+              })
+            }}
               className="add-image"
               auto-size
               style={{
