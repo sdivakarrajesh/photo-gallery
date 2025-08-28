@@ -126,7 +126,7 @@ export function App() {
           <NiceScrollbarMTS main-thread:ref={scrollbarMTSRef} />
           <scroll-view
             scroll-orientation="vertical"
-            style={{ width: "100%", height: "1000px" }}
+            style={{ width: "100%", height: "500px" }}
           >
             <view className="gallery-grid">
               {pictureData.map((picture, index) => (
