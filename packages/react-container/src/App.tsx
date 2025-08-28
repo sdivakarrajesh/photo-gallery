@@ -16,6 +16,9 @@ const App = () => {
     const lynxView = document.querySelector('lynx-view');
     lynxView.onNativeModulesCall = (name, data, moduleName) => {
       console.log("From host react", name, data, moduleName);
+      return {
+        "status": "success"
+      }
     };
     const run = async () => {
       try { 

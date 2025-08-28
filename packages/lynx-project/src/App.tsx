@@ -8,6 +8,7 @@ import {
 } from "./components/NiceScrollbarMTS.jsx";
 import { DetailView } from "./DetailView.jsx";
 import searchImage from "./resources/search.png";
+import addImage from "./resources/plus.png";
 
 const pictureData = [
   { src: pic0 },
@@ -87,8 +88,11 @@ export function App() {
         />
       ) : (
         <view class="gallery-page">
-          <text className="heading">Gallery</text>
-
+          <view className="header">
+            <text className="heading">Gallery</text>
+            <image src={addImage} auto-size style={{width: "24px"}} ></image>
+          </view>
+          
           <text className="subheading">Tap a photo to view details</text>
           <view className="search-box">
             <image

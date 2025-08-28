@@ -9,6 +9,13 @@
     padding: 100px 20px;
 }
 
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
 .heading {
     font-size: 3rem;
     color: white;
@@ -157,7 +164,7 @@
     margin-bottom: 40px;
 }
 
-.search-input{
+.search-input {
     /* color: rgba(255, 255, 255, 0.7); */
     color: red;
 }
