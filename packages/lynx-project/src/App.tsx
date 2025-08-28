@@ -31,9 +31,6 @@ const pictureData = [
   { src: pic0 },
   { src: pic0 },
   { src: pic0 },
-    { src: pic0 },
-  { src: pic0 },
-    { src: pic0 },
   { src: pic0 },
   { src: pic0 },
   { src: pic0 },
@@ -53,7 +50,10 @@ const pictureData = [
   { src: pic0 },
   { src: pic0 },
   { src: pic0 },
-    { src: pic0 },
+  { src: pic0 },
+  { src: pic0 },
+  { src: pic0 },
+  { src: pic0 },
   { src: pic0 },
 ];
 
@@ -65,7 +65,7 @@ export function App() {
   const galleryRef = useRef<NodesRef>(null);
 
   useEffect(() => {
-    console.info("Hello, from Lynx");
+    console.info("Hello, from Lynx 2");
     // NativeModules.bridge.call("getImages", null, ()=>{})
   }, []);
 
@@ -90,9 +90,21 @@ export function App() {
         <view class="gallery-page">
           <view className="header">
             <text className="heading">Gallery</text>
-            <image src={addImage} auto-size style={{width: "24px"}} ></image>
+            <image
+              className="add-image"
+              auto-size
+              style={{
+                display: "inline-block",
+                backgroundImage: `url(${addImage})`,
+                width: "24px",
+                height: "24px",
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            ></image>
           </view>
-          
+
           <text className="subheading">Tap a photo to view details</text>
           <view className="search-box">
             <image
@@ -112,25 +124,29 @@ export function App() {
           </view>
 
           <NiceScrollbarMTS main-thread:ref={scrollbarMTSRef} />
-          <scroll-view 
-          scroll-orientation="vertical"
-          style={{ width: "100%", height: "1000px" }}
+          <scroll-view
+            scroll-orientation="vertical"
+            style={{ width: "100%", height: "1000px" }}
           >
             <view className="gallery-grid">
-            {pictureData.map((picture, index) => (
-              <view
-                item-key={"" + index}
-                key={"" + index}
-                bindtap={() => {
-                  setSelectedPicture(picture);
-                  setShowDetail(true);
-                }}
-              >
-                <image className="gallery-image" auto-size style={{backgroundImage: `url(${pic0})`}} />
-              </view>
-            ))}
+              {pictureData.map((picture, index) => (
+                <view
+                  item-key={"" + index}
+                  key={"" + index}
+                  bindtap={() => {
+                    setSelectedPicture(picture);
+                    setShowDetail(true);
+                  }}
+                >
+                  <image
+                    className="gallery-image"
+                    auto-size
+                    style={{ backgroundImage: `url(${pic0})` }}
+                  />
+                </view>
+              ))}
             </view>
-          {/* <list
+            {/* <list
             ref={galleryRef}
             className="list"
             list-type="waterfall"

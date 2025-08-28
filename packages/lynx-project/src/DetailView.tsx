@@ -13,22 +13,64 @@ export function DetailView({ picture, onClose }: DetailParams) {
   return (
     <view className="detail-view">
       <view className="detail-view-header">
-        <image src={backImage} style={{ width: "24px" }} auto-size bindtap={onClose} />
-        <image src={infoImage} style={{ width: "24px" }} auto-size />
+        <image
+          style={{
+            //@ts-ignore
+            display: "inline-block",
+            width: "24px",
+            height: "24px",
+            backgroundImage: `url(${backImage})`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+          auto-size
+          bindtap={onClose}
+        />
+        <image
+          style={{
+            //@ts-ignore
+            display: "inline-block",
+            width: "24px",
+            height: "24px",
+            backgroundImage: `url(${infoImage})`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+          auto-size />
       </view>
 
       <view
         className={`image-full-view ${isPII ? "blurred" : ""}`}
-        
+
       >
-        <image src={picture.src} style={{ width: "100%" }} auto-size />
+        <image
+          style={{
+            //@ts-ignore
+            display: "inline-block",
+            width: "100%",
+            height: "100%",
+            backgroundImage: `url(${picture.src})`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }} auto-size />
       </view>
       {isPII && (
         <view className="overlay-lock anim" bindtap={() => setIsPII(!isPII)}>
           <image
             className="image"
-            src={lockImage}
-            style={{ width: "100%" }}
+            style={{
+              //@ts-ignore
+              display: "inline-block",
+              width: "24px",
+              height: "24px",
+              backgroundImage: `url(${lockImage})`,
+              backgroundSize: "contain",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
             auto-size
           />
         </view>
