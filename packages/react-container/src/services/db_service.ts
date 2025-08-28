@@ -38,6 +38,35 @@ export function cosinesim(A, B) {
 
 export default class StorageService {
   static secret = "secret";
+
+  async pickPhoto(): Promise<string | null> {
+    return new Promise((resolve, reject) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.style.display = 'none';
+      document.body.appendChild(input);
+      input.onchange = () => {
+        const file = input.files && input.files[0];
+        if (!file) {
+          document.body.removeChild(input);
+          resolve(null);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          document.body.removeChild(input);
+          resolve(reader.result as string);
+        };
+        reader.onerror = (e) => {
+          document.body.removeChild(input);
+          reject(e);
+        };
+        reader.readAsDataURL(file);
+      };
+      input.click();
+    });
+  }
   async getPhotos() {
     return db.photos.toArray();
   }
