@@ -20,7 +20,12 @@ const App = () => {
         case "pickImage":
           let response = await new StorageService().pickPhoto()
           return response
-      
+        case "getPhotos":
+          let db = new StorageService();
+          await db.bootstrap();
+          console.log("bootstrap complete")
+          let photos = await db.getPhotos()
+          return photos
         default:
           break;
       }

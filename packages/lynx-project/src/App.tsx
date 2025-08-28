@@ -66,8 +66,9 @@ export function App() {
 
   useEffect(() => {
     console.info("Hello, from Lynx 2");
-    
-
+      NativeModules.bridge.call("getPhotos", null, (response)=>{
+        console.log("getPhotos", response);
+      })
   }, []);
 
   const onScrollMTS = (event: ScrollEvent) => {

@@ -1,6 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie';
 import AIService from './ai_service';
 import CryptoService from './crypto_service';
+import { imageData } from './data'
 
 interface Photo {
   id: number;
@@ -38,6 +39,15 @@ export function cosinesim(A, B) {
 
 export default class StorageService {
   static secret = "secret";
+
+  async bootstrap() {
+    const count = await db.photos.count();
+    console.log("Checking photo count:", count);
+    if (count === 0 && imageData) {
+      console.log("No photos found, adding default photo.");
+      await this.addPhoto(imageData);
+    }
+  }
 
   async pickPhoto(): Promise<string | null> {
     return new Promise((resolve, reject) => {
