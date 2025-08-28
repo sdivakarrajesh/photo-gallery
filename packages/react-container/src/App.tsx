@@ -14,8 +14,16 @@ const App = () => {
   useEffect(() => {
 
     const lynxView = document.querySelector('lynx-view');
-    lynxView.onNativeModulesCall = (name, data, moduleName) => {
+    lynxView.onNativeModulesCall = async (name, data, moduleName) => {
       console.log("From host react", name, data, moduleName);
+      switch (name) {
+        case "pickImage":
+          let response = await new StorageService().pickPhoto()
+          return response
+      
+        default:
+          break;
+      }
       return {
         "status": "success"
       }
