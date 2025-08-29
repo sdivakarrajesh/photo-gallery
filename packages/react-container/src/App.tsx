@@ -26,6 +26,11 @@ const App = () => {
           console.log("bootstrap complete")
           let photos = await db.getPhotos()
           return photos
+        case "unlockImage":
+          let unlockedPhoto = await new StorageService().unlockPhoto(data);
+          return unlockedPhoto;
+        case "getPinInputValue":
+          return document.querySelector("lynx-view").shadowRoot.querySelector("#pin-input").value
         default:
           break;
       }

@@ -9,10 +9,12 @@ import {
 import { DetailView } from "./DetailView.jsx";
 import searchImage from "./resources/search.png";
 import addImage from "./resources/plus.png";
+import lockImage from './resources/lock.png';
 // import AIService from "./services/ai_service.js";
+import { photosData } from "./services/data.js";
+import { NativeService } from "./services/native.js";
 
-
-interface Photo {
+export interface Photo {
   id: number;
   imageData: string; //base64 encoded
   isEncrypted: boolean;
@@ -26,7 +28,7 @@ interface Photo {
 
 
 export function App() {
-  const [pictures, setPictures] = useState<Photo[]>([]);
+  const [pictures, setPictures] = useState<Photo[]>(photosData);
   const [showDetail, setShowDetail] = useState(false);
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedPicture, setSelectedPicture] = useState(null);
@@ -35,19 +37,11 @@ export function App() {
 
   useEffect(() => {
     console.info("Hello, from Lynx 2");
-    NativeModules.bridge.call("getPhotos", null, (response)=>{
-      console.log("getPhotos", response);
-      setPictures(response)
-    })
-
     const run = async () => {
-      // console.log("run");
-      // let result = await new AIService().hasPII(imageData)
-      // console.log("result", result)
-
+      let photos = await NativeService.getPhotos()
+      setPictures(photos);
     }
     run()
-
   }, []);
 
   const onScrollMTS = (event: ScrollEvent) => {
@@ -114,6 +108,7 @@ export function App() {
             <view className="gallery-grid">
               {pictures.map((picture, index) => (
                 <view
+                  className="gallery-item"
                   item-key={"" + index}
                   key={"" + index}
                   bindtap={() => {
@@ -126,6 +121,10 @@ export function App() {
                     auto-size
                     style={{ backgroundImage: `url(${picture.imageData || picture.blurredImageData})` }}
                   />
+                  {picture.isEncrypted && <image 
+                  className="lock-icon"
+                  style={{ backgroundImage: `url(${lockImage})` }}
+                  />}
                 </view>
               ))}
             </view>

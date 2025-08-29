@@ -44,6 +44,21 @@
     background-color: transparent;
 }
 
+.gallery-item {
+    position: relative;;
+}
+
+.lock-icon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .scrollbar {
     position: absolute;
     right: 7px;
@@ -177,4 +192,53 @@
 .search-input:active {
     outline: none;
     box-shadow: none;
+}
+
+.popup{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70vw;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.pin-input {
+    /* width: 100%; */
+    max-width: 100%;
+    color: black;
+    background: rgb(239, 239, 239);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-top: 10px;
+}
+
+.unlock-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    background: rgb(125, 130, 212);
+    padding: 10px 15px;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.unlock-button-text {
+    color: white;
+    font-size: 16px;
 }

@@ -139,4 +139,15 @@ export default class StorageService {
       return { ...photo, similarity: sim, org_vector: curr, comp_vector: queryFeature };
     });
   }
+
+  async unlockPhoto(photo: Photo): Promise<Photo> {
+    if (!photo.isEncrypted) {
+      throw new Error("Photo is not encrypted");
+    }
+    //@ts-ignore
+    const decryptedImageData = await new CryptoService().decryptData(photo.encryptedImageData, StorageService.secret);
+    //@ts-ignore
+    const decryptedVector = await new CryptoService().decryptData(photo.encryptedVector, StorageService.secret);
+    return { ...photo, imageData: decryptedImageData, vector: JSON.parse(decryptedVector) };
+  }
 }
