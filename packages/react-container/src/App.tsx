@@ -19,6 +19,9 @@ const App = () => {
       switch (name) {
         case "pickImage":
           let response = await new StorageService().pickPhoto()
+          console.log("picked photo", response)
+          console.log("adding to database")
+          await new StorageService().addPhoto(response);
           return response
         case "getPhotos":
           let db = new StorageService();

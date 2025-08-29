@@ -55,7 +55,11 @@ export default class AIService {
     }
 
     async hasPII(photo_data: string) {
-        const task = 'Does this image have PII like passport, driving license, credit card, etc? Say "yes" or "no" followed by the reason';
+        // const task = 'Does this image have PII like passport, driving license, credit card, etc? Say "yes" or "no" followed by the reason';
+        const task = `Carefully examine the image.  
+Answer "yes" only if the image clearly shows personally identifiable documents (e.g., passport, ID card, driving license, credit card).  
+If the image shows unrelated content (like food, landscapes, animals, or objects), answer "no" and explain that it is not PII.
+Do not guess — if you are not certain, answer "no"`
         const result = await this._prompt(photo_data, task);
         return result.includes("yes");
     }

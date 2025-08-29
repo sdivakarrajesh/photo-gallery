@@ -30,6 +30,7 @@ export interface Photo {
 
 export function App() {
   const [pictures, setPictures] = useState<Photo[]>(photosData);
+  const [isPicking, setIsPicking] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [searchQuery, setSearchQuery] = useState(null);
@@ -37,13 +38,14 @@ export function App() {
   const scrollbarMTSRef = useMainThreadRef<MainThread.Element>(null);
   const galleryRef = useRef<NodesRef>(null);
 
+
+  const refreshImages = async () => {
+    let photos = await NativeService.getPhotos()
+    setPictures(photos);
+  }
   useEffect(() => {
     console.info("Hello, from Lynx 2");
-    const run = async () => {
-      let photos = await NativeService.getPhotos()
-      setPictures(photos);
-    }
-    run();
+    refreshImages();
   }, []);
 
   const onScrollMTS = (event: ScrollEvent) => {
@@ -58,8 +60,7 @@ export function App() {
 
   const search = async () => {
     if (isFiltered) {
-      let allPhotos = await NativeService.getPhotos()
-      setPictures(allPhotos)
+      refreshImages()
       setIsFiltered(false)
       NativeService.setInputValue("search-input", "")
     } else {
@@ -84,24 +85,30 @@ export function App() {
           <view class="gallery-page">
             <view className="header">
               <text className="heading">Gallery</text>
-              <image
-                bindtap={() => {
-                  NativeModules.bridge.call("pickImage", null, (response) => {
-                    console.log("picked", response);
-                  })
-                }}
-                className="add-image"
-                auto-size
-                style={{
-                  display: "inline-block",
-                  backgroundImage: `url(${addImage})`,
-                  width: "24px",
-                  height: "24px",
-                  backgroundSize: "contain",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                }}
-              ></image>
+
+              {isPicking
+                ? <view className="loader" />
+                : <image
+                  bindtap={async () => {
+                    setIsPicking(true)
+                    await NativeService.pickImage()
+                    refreshImages()
+                    setIsPicking(false)
+                  }}
+                  className="add-image"
+                  auto-size
+                  style={{
+                    display: "inline-block",
+                    backgroundImage: `url(${addImage})`,
+                    width: "24px",
+                    height: "24px",
+                    backgroundSize: "contain",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                />
+
+              }
             </view>
 
             <text className="subheading">Tap a photo to view details</text>

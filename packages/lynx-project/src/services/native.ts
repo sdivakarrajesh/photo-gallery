@@ -12,6 +12,10 @@ export class NativeService {
         })
     }
 
+    static async pickImage(): Promise<string | null> {
+        return this._native("pickImage", null);
+    }
+
     static async unlockImage(picture: Photo): Promise<Photo> {
         let response: Photo = await this._native("unlockImage", picture);
         return response;
