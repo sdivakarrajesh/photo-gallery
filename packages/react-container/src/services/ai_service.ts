@@ -8,7 +8,6 @@ import {
     CLIPVisionModelWithProjection,
     dot,
 } from "@huggingface/transformers";
-import { cosinesim } from "./db_service";
 
 export default class AIService {
     async _prompt(photo_data: string, task: string): Promise<string> {
@@ -56,7 +55,7 @@ export default class AIService {
     }
 
     async hasPII(photo_data: string) {
-        const task = 'Does this image have PII? Say "yes" or "no"';
+        const task = 'Does this image have PII like passport, driving license, credit card, etc? Say "yes" or "no" followed by the reason';
         const result = await this._prompt(photo_data, task);
         return result.includes("yes");
     }
@@ -88,10 +87,9 @@ export default class AIService {
         return normalized_text_embeds[0];
     }
 
-    async computeSimilarity(v1, v2) {
+    async computeSimilarity(v1: any, v2: any) {
         console.log("Computing similarity", v1, v2)
         return dot(v1, v2)
-        // return cosinesim(v1, v2)
     }
 
     async getBlurredImage(photo_data: string): Promise<string> {

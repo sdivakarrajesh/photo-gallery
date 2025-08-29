@@ -9,57 +9,24 @@ import {
 import { DetailView } from "./DetailView.jsx";
 import searchImage from "./resources/search.png";
 import addImage from "./resources/plus.png";
-import { imageData } from './services/data'
 // import AIService from "./services/ai_service.js";
 
-const pictureData = [
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-  { src: pic0 },
-];
+
+interface Photo {
+  id: number;
+  imageData: string; //base64 encoded
+  isEncrypted: boolean;
+  encryptedImageData?: string | null;
+  blurredImageData?: string | null; //base64 encoded
+  keywords: string[];
+  vector: number[];
+  encryptedVector?: string | null;
+}
+
+
 
 export function App() {
+  const [pictures, setPictures] = useState<Photo[]>([]);
   const [showDetail, setShowDetail] = useState(false);
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedPicture, setSelectedPicture] = useState(null);
@@ -68,9 +35,10 @@ export function App() {
 
   useEffect(() => {
     console.info("Hello, from Lynx 2");
-    // NativeModules.bridge.call("getPhotos", null, (response)=>{
-    //   console.log("getPhotos", response);
-    // })
+    NativeModules.bridge.call("getPhotos", null, (response)=>{
+      console.log("getPhotos", response);
+      setPictures(response)
+    })
 
     const run = async () => {
       // console.log("run");
@@ -100,8 +68,8 @@ export function App() {
           onClose={() => setShowDetail(false)}
         />
       ) : (
-        <scroll-view scroll-orientation="vertical" style={{width: "100%", height: "100%"}}>
-        <view class="gallery-page">
+        <scroll-view scroll-orientation="vertical" style={{ width: "100%", height: "100%" }}>
+          <view class="gallery-page">
             <view className="header">
               <text className="heading">Gallery</text>
               <image
@@ -141,27 +109,27 @@ export function App() {
                 }}
               />
             </view>
-  
-     
+
+
             <view className="gallery-grid">
-            {pictureData.map((picture, index) => (
-              <view
-                item-key={"" + index}
-                key={"" + index}
-                bindtap={() => {
-                  setSelectedPicture(picture);
-                  setShowDetail(true);
-                }}
-              >
-                <image
-                  className="gallery-image"
-                  auto-size
-                  style={{ backgroundImage: `url(${pic0})` }}
-                />
-              </view>
-            ))}
+              {pictures.map((picture, index) => (
+                <view
+                  item-key={"" + index}
+                  key={"" + index}
+                  bindtap={() => {
+                    setSelectedPicture(picture);
+                    setShowDetail(true);
+                  }}
+                >
+                  <image
+                    className="gallery-image"
+                    auto-size
+                    style={{ backgroundImage: `url(${picture.imageData || picture.blurredImageData})` }}
+                  />
+                </view>
+              ))}
             </view>
-        </view>
+          </view>
         </scroll-view>
       )}
     </view>

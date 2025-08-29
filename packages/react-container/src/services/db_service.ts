@@ -1,7 +1,24 @@
 import Dexie, { type EntityTable } from 'dexie';
 import AIService from './ai_service';
 import CryptoService from './crypto_service';
-import { imageData } from './data'
+import {
+  passportImageData,
+  bridgeImageData,
+  forestImageData,
+  livingRoomImageData,
+  icyMountainImageData,
+  flowerBasketImageData,
+  catImageData,
+  carWithNumberPlate,
+  creditCardImageData,
+  drivingLicenseImageData,
+  denseForestImageData,
+  lightHouseImageData,
+  cliffImageData,
+  oceanSideImageData,
+} from './data'
+
+import { photosData } from './full_data';
 
 interface Photo {
   id: number;
@@ -43,9 +60,24 @@ export default class StorageService {
   async bootstrap() {
     const count = await db.photos.count();
     console.log("Checking photo count:", count);
-    if (count === 0 && imageData) {
-      console.log("No photos found, adding default photo.");
-      await this.addPhoto(imageData);
+    if (count === 0) {
+      console.log("No photos found, adding default photos..");
+      // await this.addPhoto(passportImageData);
+      // await this.addPhoto(bridgeImageData);
+      // await this.addPhoto(forestImageData);
+      // await this.addPhoto(livingRoomImageData);
+      // await this.addPhoto(icyMountainImageData);
+      // await this.addPhoto(catImageData);
+      // await this.addPhoto(carWithNumberPlate);
+      // await this.addPhoto(creditCardImageData);
+      // await this.addPhoto(drivingLicenseImageData);
+      // await this.addPhoto(lightHouseImageData);
+      // await this.addPhoto(cliffImageData);
+      // await this.addPhoto(oceanSideImageData);
+      // await this.addPhoto(denseForestImageData);
+      for (const photo of photosData) {
+        await db.photos.add(photo);
+      }
     }
   }
 
@@ -89,7 +121,7 @@ export default class StorageService {
     let photo: Omit<Photo, "id"> = {
       imageData: hasPII ? "" : photo_data,
       isEncrypted: hasPII,
-      encryptedImageData: hasPII  ? await  new CryptoService().encryptData(photo_data, StorageService.secret) : "",
+      encryptedImageData: hasPII ? await new CryptoService().encryptData(photo_data, StorageService.secret) : "",
       blurredImageData: hasPII ? await new AIService().getBlurredImage(photo_data) : "",
       keywords: keywords,
       vector: vector,
