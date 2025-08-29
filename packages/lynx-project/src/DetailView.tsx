@@ -18,7 +18,7 @@ export function DetailView({ picture: pic, onClose }: DetailParams) {
   const [error, setShowError] = useState(false);
 
   const unlock = async () => {
-    let pin = await NativeService.getPinInputValue();
+    let pin = await NativeService.getInputValue("pin-input");
 
     if (pin === "1234") {
       setShowError(false);

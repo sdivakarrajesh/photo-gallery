@@ -8,6 +8,7 @@ import {
 } from "./components/NiceScrollbarMTS.jsx";
 import { DetailView } from "./DetailView.jsx";
 import searchImage from "./resources/search.png";
+import crossImage from "./resources/cross.png";
 import addImage from "./resources/plus.png";
 import lockImage from './resources/lock.png';
 // import AIService from "./services/ai_service.js";
@@ -29,6 +30,7 @@ export interface Photo {
 
 export function App() {
   const [pictures, setPictures] = useState<Photo[]>(photosData);
+  const [isFiltered, setIsFiltered] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedPicture, setSelectedPicture] = useState(null);
@@ -41,7 +43,7 @@ export function App() {
       let photos = await NativeService.getPhotos()
       setPictures(photos);
     }
-    run()
+    run();
   }, []);
 
   const onScrollMTS = (event: ScrollEvent) => {
@@ -53,6 +55,22 @@ export function App() {
       scrollbarMTSRef
     );
   };
+
+  const search = async () => {
+    if (isFiltered) {
+      let allPhotos = await NativeService.getPhotos()
+      setPictures(allPhotos)
+      setIsFiltered(false)
+      NativeService.setInputValue("search-input", "")
+    } else {
+      let searchQuery = await NativeService.getInputValue("search-input")
+      console.log(searchQuery)
+      let filteredPhotos = await NativeService.filterPhotos(searchQuery)
+      setPictures(filteredPhotos)
+      setIsFiltered(true)
+    }
+
+  }
 
   return (
     <view className="page">
@@ -88,20 +106,35 @@ export function App() {
 
             <text className="subheading">Tap a photo to view details</text>
             <view className="search-box">
-              <image
-                src={searchImage}
-                style={{ width: "24px", opacity: 0.7 }}
-                auto-size
-              />
               <input
+                id="search-input"
                 className="search-input"
-                style={{ width: "100%", color: "white" }}
+                style={{ color: "white" }}
                 placeholder="Search Photos"
-                bindinput={(res: any) => {
-                  console.log(res.detail.value);
-                  setSearchQuery(res.detail.value);
-                }}
+              // bindinput={(res: any) => {
+              //   console.log(res.detail.value);
+              //   setSearchQuery(res.detail.value);
+              // }}
               />
+              <view
+                style={{
+                  backgroundColor: isFiltered ? "transparent" : "#7d82d4"
+                }}
+                className="search-icon"
+                bindtap={() => search()}>
+                <image
+                  style={{
+                    display: "inline-block",
+                    width: "24px",
+                    height: "24px",
+                    backgroundImage: `url(${isFiltered ? crossImage : searchImage})`,
+                    backgroundSize: "contain",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                  auto-size
+                />
+              </view>
             </view>
 
 
@@ -121,9 +154,9 @@ export function App() {
                     auto-size
                     style={{ backgroundImage: `url(${picture.imageData || picture.blurredImageData})` }}
                   />
-                  {picture.isEncrypted && <image 
-                  className="lock-icon"
-                  style={{ backgroundImage: `url(${lockImage})` }}
+                  {picture.isEncrypted && <image
+                    className="lock-icon"
+                    style={{ backgroundImage: `url(${lockImage})` }}
                   />}
                 </view>
               ))}

@@ -133,11 +133,14 @@ export default class StorageService {
   async filterPhotos(query: string) {
     const photos = await this.getPhotos();
     let queryFeature = await new AIService().generateVector(query);
-    return photos.map(photo => {
-      let curr = photo.vector || []
-      let sim = cosinesim(curr, queryFeature);
-      return { ...photo, similarity: sim, org_vector: curr, comp_vector: queryFeature };
-    });
+    return photos
+      .filter(photo => !photo.isEncrypted)
+      .map(photo => {
+        let curr = photo.vector || []
+        let sim = cosinesim(curr, queryFeature);
+        return { ...photo, similarity: sim, org_vector: curr, comp_vector: queryFeature };
+      })
+      .filter(photo => photo.similarity > 0.7);
   }
 
   async unlockPhoto(photo: Photo): Promise<Photo> {

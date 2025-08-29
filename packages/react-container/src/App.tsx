@@ -29,8 +29,13 @@ const App = () => {
         case "unlockImage":
           let unlockedPhoto = await new StorageService().unlockPhoto(data);
           return unlockedPhoto;
-        case "getPinInputValue":
-          return document.querySelector("lynx-view").shadowRoot.querySelector("#pin-input").value
+        case "getInputValue":
+          return document.querySelector("lynx-view").shadowRoot.querySelector(`#${data}`).value
+        case "setInputValue":
+          return document.querySelector("lynx-view").shadowRoot.querySelector(`#${data.element_id}`).value = data.value
+        case "filterPhotos":
+          let filteredPhotos = await new StorageService().filterPhotos(data);
+          return filteredPhotos;
         default:
           break;
       }
