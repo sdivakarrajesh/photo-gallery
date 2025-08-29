@@ -77,7 +77,7 @@ export function DetailView({ picture: pic, onClose }: DetailParams) {
             backgroundRepeat: "no-repeat",
           }} auto-size />
       </view>
-      {picture.isEncrypted  && !picture.imageData  && (
+      {picture.isEncrypted && !picture.imageData && (
         <view className="overlay-lock anim" bindtap={() => setShowPopup(true)}>
           <image
             className="image"
@@ -114,7 +114,9 @@ export function DetailView({ picture: pic, onClose }: DetailParams) {
             <view className="unlock-button" bindtap={() => unlock(pinInput)}>
               <text className="unlock-button-text">Unlock</text>
             </view>
-            {error && <text style={{ color: "red", marginTop: 10, textAlign: "center" }}>Incorrect PIN. Please try again.</text>}
+            {error && <view style={{ marginTop: "10px" }}>
+              <text style={{ color: "red", textAlign: "center" }}>Incorrect PIN. Please try again.</text>
+            </view>}
           </view>
         )
       }
