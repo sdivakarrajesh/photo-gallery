@@ -9,6 +9,8 @@ import {
 import { DetailView } from "./DetailView.jsx";
 import searchImage from "./resources/search.png";
 import addImage from "./resources/plus.png";
+import { imageData } from './services/data'
+// import AIService from "./services/ai_service.js";
 
 const pictureData = [
   { src: pic0 },
@@ -66,9 +68,18 @@ export function App() {
 
   useEffect(() => {
     console.info("Hello, from Lynx 2");
-      NativeModules.bridge.call("getPhotos", null, (response)=>{
-        console.log("getPhotos", response);
-      })
+    // NativeModules.bridge.call("getPhotos", null, (response)=>{
+    //   console.log("getPhotos", response);
+    // })
+
+    const run = async () => {
+      // console.log("run");
+      // let result = await new AIService().hasPII(imageData)
+      // console.log("result", result)
+
+    }
+    run()
+
   }, []);
 
   const onScrollMTS = (event: ScrollEvent) => {
@@ -89,81 +100,52 @@ export function App() {
           onClose={() => setShowDetail(false)}
         />
       ) : (
+        <scroll-view scroll-orientation="vertical" style={{width: "100%", height: "100%"}}>
         <view class="gallery-page">
-          <view className="header">
-            <text className="heading">Gallery</text>
-            <image
-            bindtap={()=>{
-              NativeModules.bridge.call("pickImage", null, (response)=>{
-                console.log("picked", response);
-              })
-            }}
-              className="add-image"
-              auto-size
-              style={{
-                display: "inline-block",
-                backgroundImage: `url(${addImage})`,
-                width: "24px",
-                height: "24px",
-                backgroundSize: "contain",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            ></image>
-          </view>
-
-          <text className="subheading">Tap a photo to view details</text>
-          <view className="search-box">
-            <image
-              src={searchImage}
-              style={{ width: "24px", opacity: 0.7 }}
-              auto-size
-            />
-            <input
-              className="search-input"
-              style={{ width: "100%", color: "white" }}
-              placeholder="Search Photos"
-              bindinput={(res: any) => {
-                console.log(res.detail.value);
-                setSearchQuery(res.detail.value);
-              }}
-            />
-          </view>
-
-          <NiceScrollbarMTS main-thread:ref={scrollbarMTSRef} />
-          <scroll-view
-            scroll-orientation="vertical"
-            style={{ width: "100%", height: "500px" }}
-          >
-            <view className="gallery-grid">
-              {pictureData.map((picture, index) => (
-                <view
-                  item-key={"" + index}
-                  key={"" + index}
-                  bindtap={() => {
-                    setSelectedPicture(picture);
-                    setShowDetail(true);
-                  }}
-                >
-                  <image
-                    className="gallery-image"
-                    auto-size
-                    style={{ backgroundImage: `url(${pic0})` }}
-                  />
-                </view>
-              ))}
+            <view className="header">
+              <text className="heading">Gallery</text>
+              <image
+                bindtap={() => {
+                  NativeModules.bridge.call("pickImage", null, (response) => {
+                    console.log("picked", response);
+                  })
+                }}
+                className="add-image"
+                auto-size
+                style={{
+                  display: "inline-block",
+                  backgroundImage: `url(${addImage})`,
+                  width: "24px",
+                  height: "24px",
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              ></image>
             </view>
-            {/* <list
-            ref={galleryRef}
-            className="list"
-            list-type="waterfall"
-            column-count={2}
-            scroll-orientation="vertical"
-            custom-list-name="list-container"
-            main-thread:bindscroll={onScrollMTS}
-          >
-            {pictureData.map((picture, index: number) => (
-              <list-item
+
+            <text className="subheading">Tap a photo to view details</text>
+            <view className="search-box">
+              <image
+                src={searchImage}
+                style={{ width: "24px", opacity: 0.7 }}
+                auto-size
+              />
+              <input
+                className="search-input"
+                style={{ width: "100%", color: "white" }}
+                placeholder="Search Photos"
+                bindinput={(res: any) => {
+                  console.log(res.detail.value);
+                  setSearchQuery(res.detail.value);
+                }}
+              />
+            </view>
+  
+     
+            <view className="gallery-grid">
+            {pictureData.map((picture, index) => (
+              <view
                 item-key={"" + index}
                 key={"" + index}
                 bindtap={() => {
@@ -171,13 +153,18 @@ export function App() {
                   setShowDetail(true);
                 }}
               >
-                <image className="gallery-image" src={pic0} auto-size />
-              </list-item>
+                <image
+                  className="gallery-image"
+                  auto-size
+                  style={{ backgroundImage: `url(${pic0})` }}
+                />
+              </view>
             ))}
-          </list> */}
-          </scroll-view>
+            </view>
         </view>
+        </scroll-view>
       )}
     </view>
+
   );
 }
