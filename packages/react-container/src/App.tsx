@@ -9,6 +9,7 @@ import { imageData } from './services/data'
 import StorageService from "./services/db_service";
 import AIService from "./services/ai_service";
 import CryptoService from "./services/crypto_service";
+import { setupAurora } from "./services/aurora";
 
 const App = () => {
   useEffect(() => {
@@ -68,6 +69,7 @@ const App = () => {
 
     }
     run()
+    setupAurora()
   }, []);
 
   return (<>

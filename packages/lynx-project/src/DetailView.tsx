@@ -84,7 +84,7 @@ export function DetailView({ picture: pic, onClose }: DetailParams) {
               backgroundRepeat: "no-repeat",
             }} auto-size />
           {picture.isEncrypted && !picture.imageData && (
-            <view className="overlay-lock anim" bindtap={(event) => {
+            <view id="lock-aurora" className="overlay-lock anim" bindtap={(event) => {
               console.log("clicked on lock", event);
               setShowPopup(true);
               tapTSRef.current = event.timestamp;
