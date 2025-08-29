@@ -12,7 +12,7 @@ interface DetailParams {
 
 export function DetailView({ picture: pic, onClose }: DetailParams) {
   const [picture, setPicture] = useState<Photo>(pic);
-  const [isUnlocking, setIsUnlocking] = useState(true);
+  const [isUnlocking, setIsUnlocking] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [error, setShowError] = useState(false);
@@ -36,7 +36,7 @@ export function DetailView({ picture: pic, onClose }: DetailParams) {
 
 
   return (
-    <view className="detail-view">
+    <view className="detail-view" bindtap={() => showPopup && setShowPopup(false)}>
       <view className="detail-view-header">
         <image
           style={{
