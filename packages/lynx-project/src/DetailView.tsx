@@ -14,8 +14,9 @@ export function DetailView({ picture: pic, onClose }: DetailParams) {
   const [picture, setPicture] = useState<Photo>(pic);
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [showImage, setShowImage] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+  const [showPopup, setShowPopup] = useState(true);
   const [error, setShowError] = useState(false);
+  const tapTSRef = useRef();
 
   const unlock = async () => {
     let pin = await NativeService.getInputValue("pin-input");
@@ -36,7 +37,7 @@ export function DetailView({ picture: pic, onClose }: DetailParams) {
 
 
   return (
-    <view className="detail-view" bindtap={() => showPopup && setShowPopup(false)}>
+    <view className="detail-view">
       <view className="detail-view-header">
         <image
           style={{
@@ -80,7 +81,12 @@ export function DetailView({ picture: pic, onClose }: DetailParams) {
           }} auto-size />
       </view>
       {picture.isEncrypted && !picture.imageData && (
-        <view className="overlay-lock anim" bindtap={() => setShowPopup(true)}>
+        <view className="overlay-lock anim" bindtap={(event) => {
+          console.log("clicked on lock", event);
+          setShowPopup(true);
+          tapTSRef.current = event.timestamp;
+          event.stopPropagation();
+        }}>
           <image
             className="image"
             style={{
@@ -100,29 +106,38 @@ export function DetailView({ picture: pic, onClose }: DetailParams) {
 
       {
         showPopup && (
-          <view className="popup">
-            <text style={{ marginBottom: 10 }}>Enter PIN to unlock</text>
-            <input
-              id="pin-input"
-              type="number"
-              className="pin-input"
-              placeholder="Enter PIN"
-            // bindinput={(res: any) => {
-            //   console.log(res)
-            //   console.log(res.detail.value)
-            //   setPinInput(res.detail.value);
-            // }}
-            />
-            <view className={`unlock-button ${isUnlocking ? "is-unlocking" : ""}`} bindtap={() => !isUnlocking && unlock()}>
-              {isUnlocking && <view className="loader small" style={{ marginRight: "8px" }} />}
-              <text className="unlock-button-text">{
-                isUnlocking ? "Unlocking..." : "Unlock"
-              }</text>
+          <view className="popup-container">
+            <view className="popup" id="unlock-popup">
+              <text style={{ marginBottom: 10 }}>Enter PIN to unlock</text>
+              <input
+                id="pin-input"
+                type="number"
+                className="pin-input"
+                placeholder="Enter PIN"
+              // bindinput={(res: any) => {
+              //   console.log(res)
+              //   console.log(res.detail.value)
+              //   setPinInput(res.detail.value);
+              // }}
+              />
+              <view className="popup-btns">
+                <view className="cancel-btn" bindtap={() => setShowPopup(false)}>
+                  <text style={{color: "white"}}>Cancel</text>
+                </view>
+                  <view id="unlock-btn" className={`unlock-button ${isUnlocking ? "is-unlocking" : ""}`} bindtap={() => !isUnlocking && unlock()}>
+                {isUnlocking && <view className="loader small" style={{ marginRight: "8px" }} />}
+                <text className="unlock-button-text">{
+                  isUnlocking ? "Unlocking..." : "Unlock"
+                }</text>
+              </view>
+              </view>
+            
+              {error && <view style={{ marginTop: "10px" }}>
+                <text style={{ color: "red", textAlign: "center" }}>Incorrect PIN. Please try again.</text>
+              </view>}
             </view>
-            {error && <view style={{ marginTop: "10px" }}>
-              <text style={{ color: "red", textAlign: "center" }}>Incorrect PIN. Please try again.</text>
-            </view>}
           </view>
+
         )
       }
     </view>
